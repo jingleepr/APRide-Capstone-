@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register page</title>
+    <link rel="stylesheet" href="css/Register.css">
+</head>
+<body>
+    <form action="register_verification.php" method="POST">
+    <div class="container">
+        <div class="left"></div>
+        <div class="right">
+            <div class="row flex-start">
+                Sign Up to APU Carpool
+            </div>
+            <div  style="font-size: 18px;"class="row ">
+                Profile picture
+            </div>
+            <div style="height: 20%;" class="row">
+                <input type="file" name="profile" id="fileInput" accept="image/png" required><div class="circle" id="uploadCircle" >
+                    <span>Click to Upload</span>
+                    <img id="previewImage">
+                </div>
+            </div>
+            <div  style="font-size: 18px;"class="row flex-start">
+                Phone Number 
+            </div>
+            <div class="row flex-start">
+                <input type="number" class="input" name="contacts" required>
+            </div>
+            <div  style="font-size: 18px;"class="row flex-start">
+                Username
+            </div>
+            <div class="row flex-start">
+                <input type="text" class="input" name="username" required>
+            </div>
+            <div  style="font-size: 18px;"class="row flex-start">
+                Password
+            </div>
+            <div class="row flex-start">
+                <input type="password" class="input" name="password" required>
+            </div>
+            <div  style="font-size: 18px;"class="row flex-start">
+                Gender
+            </div>
+            <div class="row flex-start">
+                <select class = "input" name="gender" required>
+                    <option value = "">Gender</option>
+                    <option value ="M">Male</option>
+                    <option value ="F">Female</option> 
+                </select>
+            </div>
+            <div  style="font-size: 18px;"class="row flex-start">
+                Date of Birth
+            </div>
+            <div class="row flex-start">
+                <input type="date" class="input" name="date" required>
+            </div>
+            <div  class="row flex-start">
+                
+            </div>
+            <div class="row flex-start">
+                <button class="submit" type="submit">Sign Up</button>
+            </div>
+            <div  style="font-size: 12px;"class="row ">
+                Already have an account? <a href="Login.html"> Click here!</a>
+            </div>
+
+
+          
+
+
+        </div>
+    </div>
+</form>
+
+<script>
+    const circle = document.getElementById("uploadCircle");
+    const fileInput = document.getElementById("fileInput");
+    const previewImage = document.getElementById("previewImage");
+    const phoneNumberInput = document.querySelector('input[name="contacts"]');
+    const dobInput = document.querySelector('input[name="date"]');
+    const form = document.querySelector("form");
+
+    let isImageSelected = false; // Track if an image is selected
+
+    // Handle Image Upload
+    circle.addEventListener("click", () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener("change", function(event) {
+        const file = event.target.files[0];
+
+        if (file && file.type === "image/png") {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewImage.style.display = "block"; 
+                circle.querySelector("span").style.display = "none"; 
+                isImageSelected = true; // Set flag to true
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            alert("Please select a PNG file.");
+            isImageSelected = false; // Reset flag if invalid file
+        }
+    });
+
+    // Validate Phone Number (Must be exactly 15 digits)
+    phoneNumberInput.addEventListener("input", function () {
+        if (phoneNumberInput.value.length > 10) {
+            phoneNumberInput.value = phoneNumberInput.value.slice(0, 10); // Trim excess characters
+        }
+    });
+
+    // Validate form submission
+    form.addEventListener("submit", function (event) {
+        const dobValue = dobInput.value;
+        const birthYear = new Date(dobValue).getFullYear();
+        const currentYear = new Date().getFullYear();
+        const age = currentYear - birthYear;
+
+        
+        if (!isImageSelected) {
+            event.preventDefault();
+            alert("Please upload a profile picture.");
+            return;
+        }
+
+        
+        if (phoneNumberInput.value.length !== 10) {
+            event.preventDefault();
+            alert("Phone number must be exactly 10 digits.");
+            return;
+        }
+
+        
+        if (dobValue && age < 16) {
+            event.preventDefault();
+            alert("You must be at least 16 years old to sign up.");
+        }
+    });
+</script>
+
+</body>
+</html>
